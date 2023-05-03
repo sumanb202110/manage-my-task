@@ -4,3 +4,10 @@ export type NewTask = {
     description: String,
     task_status: String
 }
+
+export type User = {
+    name: String,
+    email: String,
+    contact_no: String,
+    dob: Date
+}

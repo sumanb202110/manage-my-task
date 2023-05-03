@@ -90,12 +90,6 @@ const TaskForm = (props: Props) => {
         }
             <Box
                 data-testid={"task-form"}
-                component="form"
-                sx={{
-                    '& > :not(style)': { m: 1 },
-                }}
-                noValidate
-                autoComplete="off"
             >
                 {
                     isEdit ?

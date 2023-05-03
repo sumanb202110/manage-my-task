@@ -34,6 +34,7 @@ export default function Home(props : Props) {
         <h1>Manage my task</h1>
         <UsernameTag username={username}/>
         <Link href={"/tasks"}>Manage Tasks</Link>
+        <Link href={"/users"}>Users portal</Link>
        <TaskList tasks={tasks}/>
       </main>
     </>
