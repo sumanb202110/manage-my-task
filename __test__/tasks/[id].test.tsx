@@ -106,7 +106,9 @@ describe('Tasks', () => {
         expect(getStaticPropsFunc.props.task.id).toEqual(undefined);
 
         const getStaticPropsFunc1 = await getStaticProps({id: undefined} as any);
-        expect(getStaticPropsFunc.props.task.id).toEqual(undefined)
+        expect(getStaticPropsFunc1.props.task.id).toEqual(undefined)
+
+        const getStaticPropsFunc2 = await getStaticProps({id: null} as any);
 
 
     })
