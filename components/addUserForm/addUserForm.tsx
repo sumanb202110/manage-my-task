@@ -8,10 +8,11 @@ import { User } from "@/interfaces";
 import AddUserFormStyles from './addUserForm.module.scss'
 import { useDispatch } from "react-redux";
 import { addUser } from "@/features/users/usersSlice";
+import axios from "axios";
 
 const AddUserForm = () => {
     const dispatch = useDispatch()
-    
+
     const [open, setOpen] = useState(false);
     const [name, setName] = useState<User['name']>();
     const [email, setEmail] = useState<User['email']>();
@@ -19,16 +20,16 @@ const AddUserForm = () => {
     const [dob, setDob] = useState<Dayjs | null>(dayjs());
 
     const [errors, setErrors] = useState({
-        name : {
-            error : false,
+        name: {
+            error: false,
             msg: ""
         },
-        email : {
-            error : false,
+        email: {
+            error: false,
             msg: ""
         },
-        contact_no : {
-            error : false,
+        contact_no: {
+            error: false,
             msg: ""
         }
     });
@@ -42,51 +43,56 @@ const AddUserForm = () => {
         setOpen(false);
     };
 
-    const handleNameChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newName = event.target.value;
         setName(newName);
 
-        if(newName.trim() === ""){
-            setErrors({...errors, name : {error: true, msg : "Please enter valid name"}})
-        }else{
-            setErrors({...errors, name : {error: false, msg : ""}})
+        if (newName.trim() === "") {
+            setErrors({ ...errors, name: { error: true, msg: "Please enter valid name" } })
+        } else {
+            setErrors({ ...errors, name: { error: false, msg: "" } })
         }
     };
 
-    const handleEmailChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newEmail = event.target.value;
         setEmail(newEmail);
 
         const emailRegex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
-        if(!emailRegex.test(newEmail)){
-            setErrors({...errors, email : {error: true, msg : "Please enter valid email"}})
-        }else{
-            setErrors({...errors, email : {error: false, msg : ""}})
+        if (!emailRegex.test(newEmail)) {
+            setErrors({ ...errors, email: { error: true, msg: "Please enter valid email" } })
+        } else {
+            setErrors({ ...errors, email: { error: false, msg: "" } })
         }
     };
 
-    const handleContactNoChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleContactNoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newContactNo = event.target.value;
         setContactNo(newContactNo);
-        console.log(newContactNo)
 
         const contactNoRegex = new RegExp(/^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/);
 
-        if(!contactNoRegex.test(newContactNo)){
-            setErrors({...errors, contact_no : {error: true, msg : "Please enter valid contact no"}})
-        }else{
-            setErrors({...errors, contact_no : {error: false, msg : ""}})
+        if (!contactNoRegex.test(newContactNo)) {
+            setErrors({ ...errors, contact_no: { error: true, msg: "Please enter valid contact no" } })
+        } else {
+            setErrors({ ...errors, contact_no: { error: false, msg: "" } })
         }
     };
 
 
     const handleSave = () => {
-        dispatch(addUser({
-            name: name!,
-            email: email!, 
-            contact_no: contactNo!,
-            dob: dob?.toDate()!
-        }))
+        axios.post('http://localhost:3000/api/users',
+            {
+                name: name!,
+                email: email!,
+                contact_no: contactNo!,
+                dob: dob?.toDate()!
+            }
+        ).then((response)=>{
+            dispatch(addUser(response.data))
+        }).catch((error)=>{
+            console.log(error);
+        })
         // console.log(name, email, contactNo, dob);
         setOpen(false);
 
@@ -94,7 +100,7 @@ const AddUserForm = () => {
 
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button variant="outlined" onClick={handleClickOpen} data-testid={"add-user-button"}>
                 Add User
             </Button>
             <Dialog open={open} onClose={handleClose}>
@@ -110,6 +116,7 @@ const AddUserForm = () => {
                     >
                         <div>
                             <TextField
+                                data-testid={"add-user-form-name-field"}
                                 className={AddUserFormStyles.user_input}
                                 id="name"
                                 label="Name"
@@ -123,6 +130,7 @@ const AddUserForm = () => {
                         </div>
                         <div>
                             <TextField
+                                data-testid={"add-user-form-email-field"}
                                 className={AddUserFormStyles.user_input}
                                 id="email"
                                 label="email"
@@ -135,6 +143,7 @@ const AddUserForm = () => {
                             />
                         </div>
                         <div><TextField
+                            data-testid={"add-user-form-contactno-field"}
                             id="contactno"
                             className={AddUserFormStyles.user_input}
                             label="Contact No"
@@ -148,20 +157,21 @@ const AddUserForm = () => {
                         </div>
                         <div>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="Date of birth"
-                                        value={dob}
-                                        onChange={(newDob) => setDob(newDob)}
-                                        maxDate={dayjs()}
-                                    />
+                                <DatePicker
+                                    data-testid={"add-user-form-dob-field"}
+                                    label="Date of birth"
+                                    value={dob}
+                                    onChange={(newDob) => setDob(newDob)}
+                                    maxDate={dayjs()}
+                                />
                             </LocalizationProvider>
                         </div>
 
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleSave}>Add</Button>
+                    <Button onClick={handleClose} data-testid={"add-user-form-cancel-button"} >Cancel</Button>
+                    <Button onClick={handleSave} data-testid={"add-user-form-add-button"}>Add</Button>
                 </DialogActions>
             </Dialog>
         </div>

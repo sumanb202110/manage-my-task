@@ -6,8 +6,8 @@ export type NewTask = {
 }
 
 export type User = {
-    name: String,
-    email: String,
-    contact_no: String,
+    name: string,
+    email: string,
+    contact_no: string,
     dob: Date
 }

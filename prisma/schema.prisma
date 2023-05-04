@@ -17,3 +17,10 @@ model Task {
   description String
   task_status String
 }
+
+model User {
+  email    String     @id
+  name  String
+  contact_no String
+  dob DateTime  @db.Date
+}
