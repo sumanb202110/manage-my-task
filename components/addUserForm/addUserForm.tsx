@@ -14,9 +14,9 @@ const AddUserForm = () => {
     const dispatch = useDispatch()
 
     const [open, setOpen] = useState(false);
-    const [name, setName] = useState<User['name']>();
-    const [email, setEmail] = useState<User['email']>();
-    const [contactNo, setContactNo] = useState<User['contact_no']>();
+    const [name, setName] = useState<User['name']>("");
+    const [email, setEmail] = useState<User['email']>("");
+    const [contactNo, setContactNo] = useState<User['contact_no']>("");
     const [dob, setDob] = useState<Dayjs | null>(dayjs());
 
     const [errors, setErrors] = useState({
